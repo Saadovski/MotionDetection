@@ -2,6 +2,7 @@ package com.example.first_app_test;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -10,8 +11,11 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.util.Pair;
 import android.widget.TextView;
@@ -44,6 +48,7 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
 
     private HashMap<Timestamp, List<Float>> finalResultMap; //will contain values of motion + timestamp
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +68,12 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
         startListening();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void startListening(){
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            v.vibrate(VibrationEffect.createOneShot(75, VibrationEffect.DEFAULT_AMPLITUDE)); //vibration
+        }
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME);
         sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
         SensorEventListener listener = this;
@@ -77,6 +87,9 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
             @Override
             public void onFinish() {
                 sensorManager.unregisterListener(listener); //we unregister the listener to stop recording the movements
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(75, VibrationEffect.DEFAULT_AMPLITUDE));
+                }
                 Log.d(TAG, "onFinish: " + finalResultMap.size());
                 int countAcc = 0 ,countRot = 0;
                 for(Map.Entry<Timestamp, List<Float>> entry : finalResultMap.entrySet()){

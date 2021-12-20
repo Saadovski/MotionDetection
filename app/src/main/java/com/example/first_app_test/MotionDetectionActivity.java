@@ -47,6 +47,7 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
     private CountDownTimer timer;
 
     private HashMap<Timestamp, List<Float>> finalResultMap; //will contain values of motion + timestamp
+    private int counter = 0;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -75,7 +76,7 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
             v.vibrate(VibrationEffect.createOneShot(75, VibrationEffect.DEFAULT_AMPLITUDE)); //vibration
         }
         sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME);
-        sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
+        //sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
         SensorEventListener listener = this;
         timer = new CountDownTimer(timeLeftInMilli, 10) {
             @Override
@@ -113,6 +114,8 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
         timeLeftText += centiseconds;
 
         countdown.setText(timeLeftText);
+
+
     }
 
     @Override
@@ -121,12 +124,27 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
         float[] AccArray = new float[3];
         float[] RotArray = new float[3];
 
-        if(s.getType() == Sensor.TYPE_LINEAR_ACCELERATION)
+        if(s.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             AccArray = sensorEvent.values;
+        }
 
-        if (s.getType() == Sensor.TYPE_GYROSCOPE)
+        if (s.getType() == Sensor.TYPE_GYROSCOPE) {
             RotArray = sensorEvent.values;
-        Log.d(TAG, "onSensorChanged: \nAccX: " + AccArray[0] + "\nAccY: "+ AccArray[1] +"\nAccZ: "+ AccArray[2] +"\n" + "RotX: " + RotArray[0] +"\nRotY: "+ RotArray[1] +"\nRotZ: "+ RotArray[2] +"\n");
+        }
+        ++counter;
+        if(counter >= 5){
+            if(s.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
+                sensorManager.unregisterListener(this, accel);
+                sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
+            }else{
+                sensorManager.unregisterListener(this, gyro);
+                sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME);
+            }
+            counter=0;
+        }
+
+
+        //Log.d(TAG, "onSensorChanged: \nAccX: " + AccArray[0] + "\nAccY: "+ AccArray[1] +"\nAccZ: "+ AccArray[2] +"\n" + "RotX: " + RotArray[0] +"\nRotY: "+ RotArray[1] +"\nRotZ: "+ RotArray[2] +"\n");
         List<Float> result = Arrays.asList(AccArray[0], AccArray[1], AccArray[2], RotArray[0], RotArray[1], RotArray[2]);
         finalResultMap.put(new Timestamp(System.currentTimeMillis()), result);
     }

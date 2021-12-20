@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">first_app_test</string>
+    <string name="message1">Pour enregistrer une action, appuyer sur le bouton ci-dessous</string>
+    <string name="message2">vous aurez 3 secondes pour mettre le téléphone dans votre poche puis vous aurez 7 secondes pour faire votre action</string>
+    <string name="button1">Demarrer</string>
+    <string name="countdown_timer">7:00</string>
+    <string name="message3">Choisissez l\'action que vous avez effectuée, ou annulez si vous ne voulez pas prendre en compte cet enregistrement</string>
+    <string name="buttonAnnulation">annuler enregistrement</string>
+    <string name="buttonvalidation">valider le choix</string>
+    <string name="Choix1">Tomber</string>
+    <string name="Choix2">S\'asseoir</string>
+    <string name="Choix3">Se lever</string>
+    <string name="Choix4">Marcher</string>
+    <string name="Choix5">Se coucher</string>
+    <string name="Choix6">Autre</string>
+    <string name="Patience">Patientez quelques secondes</string>
+
+</resources>

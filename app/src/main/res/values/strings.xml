@@ -12,7 +12,11 @@
     <string name="Choix3">Se lever</string>
     <string name="Choix4">Marcher</string>
     <string name="Choix5">Se coucher</string>
-    <string name="Choix6">Autre</string>
+    <string name="Choix6">Poser Téléphone</string>
+    <string name="Choix7">Prendre Téléphone</string>
+    <string name="Choix8">Chute du Téléphone</string>
+    <string name="Choix9">Mettre dans la poche</string>
+    <string name="Choix10">Sortir de la poche</string>
     <string name="Patience">Patientez quelques secondes</string>
 
 </resources>

@@ -126,13 +126,11 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
 
         if(s.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             AccArray = sensorEvent.values;
-        }
-
-        if (s.getType() == Sensor.TYPE_GYROSCOPE) {
+        }else{
             RotArray = sensorEvent.values;
         }
         ++counter;
-        if(counter >= 5){
+        if(counter >= 4){
             if(s.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
                 sensorManager.unregisterListener(this, accel);
                 sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);

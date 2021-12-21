@@ -23,7 +23,37 @@ public class DataValidationActivity extends AppCompatActivity {
     private Button validation;
     private Button annulation;
     private RadioGroup radiogroup;
+    private RadioGroup radiogroup2;
     private int choiceId;
+
+    RadioGroup.OnCheckedChangeListener listener = (new RadioGroup.OnCheckedChangeListener()
+    {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId)
+        {
+            if(group.getCheckedRadioButtonId() != -1) {
+                validation.setEnabled(true);
+                choiceId = checkedId;
+                radiogroup2.setOnCheckedChangeListener(null);
+                radiogroup2.clearCheck();
+                radiogroup2.setOnCheckedChangeListener(listener2);
+            }
+        }
+    });
+    RadioGroup.OnCheckedChangeListener listener2 = (new RadioGroup.OnCheckedChangeListener()
+    {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId)
+        {
+            if(group.getCheckedRadioButtonId() != -1) {
+                validation.setEnabled(true);
+                choiceId = checkedId;
+                radiogroup.setOnCheckedChangeListener(null);
+                radiogroup.clearCheck();
+                radiogroup.setOnCheckedChangeListener(listener);
+            }
+        }
+    });
 
 
     @Override
@@ -34,18 +64,15 @@ public class DataValidationActivity extends AppCompatActivity {
         dataMap = (HashMap<Timestamp, List<Float>>) intent.getSerializableExtra("datamap");
 
         radiogroup = findViewById(R.id.RadioGroup);
+        radiogroup2 = findViewById(R.id.RadioGroup2);
+
+        RadioGroup.OnCheckedChangeListener radioGroup1CheckedChangeListener;
+
+        radiogroup.setOnCheckedChangeListener(listener);
+        radiogroup2.setOnCheckedChangeListener(listener2);
+
         validation = findViewById(R.id.button3);
         annulation = findViewById(R.id.button2);
-
-        radiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId)
-            {
-                validation.setEnabled(true);
-                choiceId = checkedId;
-            }
-        });
     }
 
     public void annulerEnregistrement(View view){
@@ -72,6 +99,21 @@ public class DataValidationActivity extends AppCompatActivity {
                 break;
             case R.id.radioButton5:
                 intent.putExtra("class", 4);
+                break;
+            case R.id.radioButton6:
+                intent.putExtra("class", 5);
+                break;
+            case R.id.radioButton7:
+                intent.putExtra("class", 6);
+                break;
+            case R.id.radioButton8:
+                intent.putExtra("class", 7);
+                break;
+            case R.id.radioButton9:
+                intent.putExtra("class", 8);
+                break;
+            case R.id.radioButton10:
+                intent.putExtra("class", 9);
                 break;
         }
         startActivity(intent);

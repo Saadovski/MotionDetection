@@ -82,4 +82,44 @@
 
     </RadioGroup>
 
+    <RadioGroup
+        android:id="@+id/RadioGroup2"
+        android:layout_width="207dp"
+        android:layout_height="242dp"
+        android:layout_marginStart="200dp"
+        android:layout_marginTop="27dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+        <RadioButton
+            android:id="@+id/radioButton6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Choix6" />
+
+        <RadioButton
+            android:id="@+id/radioButton7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Choix7" />
+
+        <RadioButton
+            android:id="@+id/radioButton8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Choix8" />
+
+        <RadioButton
+            android:id="@+id/radioButton9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Choix9" />
+
+        <RadioButton
+            android:id="@+id/radioButton10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/Choix10" />
+    </RadioGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

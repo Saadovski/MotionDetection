@@ -1,7 +1,5 @@
 package com.example.first_app_test;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,37 +14,35 @@ import android.os.CountDownTimer;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
-import android.util.Pair;
 import android.widget.TextView;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.TreeMap;
 
-public class MotionDetectionActivity extends AppCompatActivity implements SensorEventListener {
+public class MotionDetectionActivity extends AppCompatActivity {
     private static final String TAG = "MotionDetectionActivity";
 
     private SensorManager sensorManager;
-    private Sensor accel;
-    private Sensor gyro;
 
     private long timeLeftInMilli = 7000; //7 seconds
     private TextView countdown;
     private CountDownTimer timer;
 
-    private HashMap<Timestamp, List<Float>> finalResultMap; //will contain values of motion + timestamp
+    private HashMap<Timestamp, List<Float>> AccList;
+    private HashMap<Timestamp, List<Float>> RotList;
     private int counter = 0;
+
+    private SensorListenerRunnable accel;
+    private SensorListenerRunnable gyro;
+
+    private boolean stopListening = false;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -55,7 +50,9 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_motion_detection);
 
-        finalResultMap = new HashMap<>();
+        AccList = new HashMap<>();
+        RotList = new HashMap<>();
+
         countdown = findViewById(R.id.textView4);
         countdown.setText("07:00");
 
@@ -63,8 +60,30 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        accel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-        gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
+        accel = new SensorListenerRunnable(Sensor.TYPE_LINEAR_ACCELERATION, sensorManager) {
+            @Override
+            public void run() {
+                while (!stopListening){}
+                return;
+            }
+
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                AccList.put(new Timestamp(System.currentTimeMillis()), Arrays.asList(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]));
+            }
+        };
+        gyro = new SensorListenerRunnable(Sensor.TYPE_GYROSCOPE, sensorManager) {
+            @Override
+            public void run() {
+                while (!stopListening){}
+                return;
+            }
+
+            @Override
+            public void onSensorChanged(SensorEvent sensorEvent) {
+                RotList.put(new Timestamp(System.currentTimeMillis()), Arrays.asList(sensorEvent.values[0], sensorEvent.values[1], sensorEvent.values[2]));
+            }
+        };
 
         startListening();
     }
@@ -75,9 +94,13 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             v.vibrate(VibrationEffect.createOneShot(75, VibrationEffect.DEFAULT_AMPLITUDE)); //vibration
         }
-        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME);
-        //sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
-        SensorEventListener listener = this;
+
+        Thread accThread = new Thread(accel);
+        Thread rotThread = new Thread(gyro);
+        rotThread.start();
+        accThread.start();
+
+
         timer = new CountDownTimer(timeLeftInMilli, 10) {
             @Override
             public void onTick(long l) {
@@ -87,18 +110,26 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
 
             @Override
             public void onFinish() {
-                sensorManager.unregisterListener(listener); //we unregister the listener to stop recording the movements
+                stopListening = true;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     v.vibrate(VibrationEffect.createOneShot(75, VibrationEffect.DEFAULT_AMPLITUDE));
                 }
-                Log.d(TAG, "onFinish: " + finalResultMap.size());
-                int countAcc = 0 ,countRot = 0;
-                for(Map.Entry<Timestamp, List<Float>> entry : finalResultMap.entrySet()){
-                    if(entry.getValue().get(0) == 0 && entry.getValue().get(1) == 0 && entry.getValue().get(2) == 0) countRot++;
-                    else if(entry.getValue().get(3) == 0 && entry.getValue().get(4) == 0 && entry.getValue().get(5) == 0) countAcc++;
-                }
+                int countRot = RotList.size() ,countAcc = AccList.size();
                 Log.d(TAG, "onFinish: countAcc " + countAcc);
                 Log.d(TAG, "onFinish: countRot " + countRot);
+                TreeMap<Timestamp, List<Float>> sortedAcc = new TreeMap<>(AccList);
+                TreeMap<Timestamp, List<Float>> sortedRot = new TreeMap<>(RotList);
+                System.out.println(sortedAcc);
+                System.out.println(sortedRot);
+                System.out.println(sortedAcc.firstEntry());
+                System.out.println(sortedRot.firstEntry());
+                int sameTS = 0;
+                for(Timestamp ts : sortedAcc.keySet()){
+                    if(sortedRot.containsKey(ts)) sameTS++;
+                }
+                System.out.println(sameTS);
+
+
                 finishListening();
             }
         }.start();
@@ -114,47 +145,12 @@ public class MotionDetectionActivity extends AppCompatActivity implements Sensor
         timeLeftText += centiseconds;
 
         countdown.setText(timeLeftText);
-
-
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        Sensor s = sensorEvent.sensor;
-        float[] AccArray = new float[3];
-        float[] RotArray = new float[3];
-
-        if(s.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            AccArray = sensorEvent.values;
-        }else{
-            RotArray = sensorEvent.values;
-        }
-        ++counter;
-        if(counter >= 4){
-            if(s.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
-                sensorManager.unregisterListener(this, accel);
-                sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
-            }else{
-                sensorManager.unregisterListener(this, gyro);
-                sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_GAME);
-            }
-            counter=0;
-        }
-
-
-        //Log.d(TAG, "onSensorChanged: \nAccX: " + AccArray[0] + "\nAccY: "+ AccArray[1] +"\nAccZ: "+ AccArray[2] +"\n" + "RotX: " + RotArray[0] +"\nRotY: "+ RotArray[1] +"\nRotZ: "+ RotArray[2] +"\n");
-        List<Float> result = Arrays.asList(AccArray[0], AccArray[1], AccArray[2], RotArray[0], RotArray[1], RotArray[2]);
-        finalResultMap.put(new Timestamp(System.currentTimeMillis()), result);
     }
 
     public void finishListening(){
         Intent intent = new Intent(this, DataValidationActivity.class);
-        intent.putExtra("datamap", (Serializable) finalResultMap);
+        intent.putExtra("Rotmap", (Serializable) RotList);
+        intent.putExtra("Accmap", (Serializable) AccList);
         startActivity(intent);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
     }
 }

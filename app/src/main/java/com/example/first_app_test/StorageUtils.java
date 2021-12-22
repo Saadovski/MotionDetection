@@ -11,11 +11,15 @@ import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvValidationException;
 import java.io.FileReader;
 import java.nio.file.Files;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class StorageUtils {
 
@@ -37,7 +41,7 @@ public class StorageUtils {
             CSVWriter writer = new CSVWriter(outputfile);
 
             // adding header to csv
-            String[] header = { "TimeStamp", "AccX", "AccY", "AccZ", "RotX", "RotY", "RotZ", "Label" };
+            String[] header = { "AccTimeStamp", "AccX", "AccY", "AccZ", "rotTimeStamp", "RotX", "RotY", "RotZ", "Label" };
             writer.writeNext(header);
             writer.close();
         } catch (IOException e) {
@@ -46,7 +50,7 @@ public class StorageUtils {
 
     }
 
-    public static void writeDataLineByLine(File dataFile, HashMap<Timestamp, List<Float>> dataMap, int label)
+    public static void writeDataLineByLine(File dataFile, TreeMap<Timestamp, List<Float>> accMap, TreeMap<Timestamp, List<Float>> rotMap, int label)
     {
 
         try {
@@ -56,18 +60,34 @@ public class StorageUtils {
             // create CSVWriter object filewriter object as parameter
             CSVWriter writer = new CSVWriter(outputfile);
 
+            Set<Map.Entry<Timestamp, List<Float>>> accEntries = accMap.entrySet();
+            Set<Map.Entry<Timestamp, List<Float>>> rotEntries = rotMap.entrySet();
+            Iterator<Map.Entry<Timestamp, List<Float>>> accIterator = accEntries.iterator();
+            Iterator<Map.Entry<Timestamp, List<Float>>> rotIterator = rotEntries.iterator();
+
             // add data to csv
-            for(Map.Entry<Timestamp, List<Float>> entry : dataMap.entrySet()){
-                List<Float> ValueList = entry.getValue();
-                String ts = ((Timestamp)entry.getKey()).toString().replace('.', ':');
-                String[] motionData = {ts,    //timestamp
-                                    ValueList.get(0).toString(), //AccX
-                                    ValueList.get(1).toString(), //AccY
-                                    ValueList.get(2).toString(), //AccZ
-                                    ValueList.get(3).toString(), //RotX
-                                    ValueList.get(4).toString(), //RotY
-                                    ValueList.get(5).toString(), //RotZ
-                                    ""+label};                   //Label
+            while(accIterator.hasNext() && rotIterator.hasNext()){
+                //retrieving the entries
+                Map.Entry<Timestamp, List<Float>> accEntry = accIterator.next();
+                Map.Entry<Timestamp, List<Float>> rotEntry = rotIterator.next();
+
+                //getting the accelerometer timestamp and values
+                List<Float> accList = accEntry.getValue();
+                String accTS = ((Timestamp)accEntry.getKey()).toString().replace('.', ':');
+
+                //getting the gyroscope's timestamp and values
+                List<Float> rotList = rotEntry.getValue();
+                String rotTS = ((Timestamp)rotEntry.getKey()).toString().replace('.', ':');
+
+                String[] motionData = {accTS,    //AccTimestamp
+                                    accList.get(0).toString(), //AccX
+                                    accList.get(1).toString(), //AccY
+                                    accList.get(2).toString(), //AccZ
+                                    rotTS,                     //RotTimestamp
+                                    rotList.get(0).toString(), //RotX
+                                    rotList.get(1).toString(), //RotY
+                                    rotList.get(2).toString(), //RotZ
+                                    ""+label};                 //Label
                 writer.writeNext(motionData);
             }
 

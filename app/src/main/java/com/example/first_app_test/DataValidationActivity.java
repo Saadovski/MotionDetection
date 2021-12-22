@@ -19,7 +19,8 @@ import java.util.List;
 
 public class DataValidationActivity extends AppCompatActivity {
     private static final String TAG = "DataValidationActivity";
-    private HashMap<Timestamp, List<Float>> dataMap;
+    private HashMap<Timestamp, List<Float>> rotMap;
+    private HashMap<Timestamp, List<Float>> accMap;
     private Button validation;
     private Button annulation;
     private RadioGroup radiogroup;
@@ -61,8 +62,8 @@ public class DataValidationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_validation);
         Intent intent = getIntent();
-        dataMap = (HashMap<Timestamp, List<Float>>) intent.getSerializableExtra("datamap");
-
+        rotMap = (HashMap<Timestamp, List<Float>>) intent.getSerializableExtra("Rotmap");
+        accMap = (HashMap<Timestamp, List<Float>>) intent.getSerializableExtra("Accmap");
         radiogroup = findViewById(R.id.RadioGroup);
         radiogroup2 = findViewById(R.id.RadioGroup2);
 
@@ -83,7 +84,8 @@ public class DataValidationActivity extends AppCompatActivity {
 
     public void validerChoix(View view){
         Intent intent = new Intent(this, DataPersistenceActivity.class);
-        intent.putExtra("datamap", (Serializable) dataMap);
+        intent.putExtra("Accmap", (Serializable) accMap);
+        intent.putExtra("Rotmap", (Serializable) rotMap);
         switch (choiceId){
             case R.id.radioButton:
                 intent.putExtra("class", 0);

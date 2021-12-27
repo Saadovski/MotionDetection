@@ -1,4 +1,4 @@
-package com.example.first_app_test;
+package com.example.MotionDetectionApp;
 
 import org.junit.Test;
 

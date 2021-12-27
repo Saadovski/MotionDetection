@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.first_app_test">
+    package="com.example.MotionDetectionApp">
 
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+
     <application
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -11,16 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.First_app_test">
         <activity
-            android:name=".DataPersistenceActivity"
+            android:name="com.example.MotionDetectionApp.DataPersistenceActivity"
             android:exported="false" />
         <activity
-            android:name=".DataValidationActivity"
+            android:name="com.example.MotionDetectionApp.DataValidationActivity"
             android:exported="false" />
         <activity
-            android:name=".MotionDetectionActivity"
+            android:name="com.example.MotionDetectionApp.MotionDetectionActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.MotionDetectionApp.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

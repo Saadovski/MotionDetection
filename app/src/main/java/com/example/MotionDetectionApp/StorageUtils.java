@@ -1,20 +1,12 @@
-package com.example.first_app_test;
-
-import android.os.Environment;
-import android.util.Pair;
+package com.example.MotionDetectionApp;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import com.opencsv.CSVReader;
+
 import com.opencsv.CSVWriter;
-import com.opencsv.exceptions.CsvValidationException;
-import java.io.FileReader;
-import java.nio.file.Files;
-import java.sql.Time;
+
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;

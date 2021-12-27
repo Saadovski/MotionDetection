@@ -1,21 +1,20 @@
-package com.example.first_app_test;
+package com.example.MotionDetectionApp;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
-import android.util.Pair;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -36,12 +35,31 @@ public class DataPersistenceActivity extends AppCompatActivity {
         HashMap<Timestamp, List<Float>> accMap= (HashMap<Timestamp, List<Float>>) intent.getSerializableExtra("Accmap");
         sortedAcc = new TreeMap<>(accMap);
         label = intent.getIntExtra("class", 10);
-        createCSVfile();
+        if (ContextCompat.checkSelfPermission(DataPersistenceActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            createCSVfile();
+        else{
+            ActivityCompat.requestPermissions(DataPersistenceActivity.this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                createCSVfile();
+        }
+        else {
+            returnToMain();
+        }
     }
 
     private void createCSVfile(){
         StorageUtils su = new StorageUtils();
-        File CSVFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath() + "/MotionData", "MotionData.CSV");
+        File CSVFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Documents/MotionData", "MotionData.CSV");
         if(!CSVFile.exists()) {
             su.createFile(CSVFile);
             su.addFileHeader(CSVFile);
@@ -60,4 +78,8 @@ public class DataPersistenceActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+
 }
+
+

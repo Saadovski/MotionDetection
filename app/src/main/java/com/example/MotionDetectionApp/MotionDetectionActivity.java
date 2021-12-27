@@ -1,10 +1,15 @@
-package com.example.first_app_test;
+package com.example.MotionDetectionApp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -17,13 +22,10 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 
 public class MotionDetectionActivity extends AppCompatActivity {
@@ -85,7 +87,29 @@ public class MotionDetectionActivity extends AppCompatActivity {
             }
         };
 
-        startListening();
+        if (ContextCompat.checkSelfPermission(MotionDetectionActivity.this, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED)
+            startListening();
+        else{
+            ActivityCompat.requestPermissions(MotionDetectionActivity.this, new String[] { Manifest.permission.ACTIVITY_RECOGNITION }, 0);
+        }
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startListening();
+        }
+        else {
+            returnToMain();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -151,6 +175,11 @@ public class MotionDetectionActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DataValidationActivity.class);
         intent.putExtra("Rotmap", (Serializable) RotList);
         intent.putExtra("Accmap", (Serializable) AccList);
+        startActivity(intent);
+    }
+
+    private void returnToMain(){
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }

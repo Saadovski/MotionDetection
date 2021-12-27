@@ -31,8 +31,8 @@
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="393dp"
-        android:layout_height="92dp"
+        android:layout_width="320dp"
+        android:layout_height="143dp"
         android:layout_marginTop="32dp"
         android:text="@string/message2"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"

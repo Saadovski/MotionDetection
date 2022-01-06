@@ -12,7 +12,7 @@
         android:layout_height="93dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
-        android:text="@string/message3"
+        android:text="@string/message3_eng"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:onClick="annulerEnregistrement"
-        android:text="@string/buttonAnnulation"
+        android:text="@string/buttonAnnulation_eng"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button3" />
@@ -35,7 +35,7 @@
         android:layout_marginBottom="204dp"
         android:enabled="false"
         android:onClick="validerChoix"
-        android:text="@string/buttonvalidation"
+        android:text="@string/buttonvalidation_eng"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -54,31 +54,31 @@
             android:id="@+id/radioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix1" />
+            android:text="@string/Choix1_eng" />
 
         <RadioButton
             android:id="@+id/radioButton2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix2" />
+            android:text="@string/Choix2_eng" />
 
         <RadioButton
             android:id="@+id/radioButton3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix3" />
+            android:text="@string/Choix3_eng" />
 
         <RadioButton
             android:id="@+id/radioButton4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix5" />
+            android:text="@string/Choix5_eng" />
 
         <RadioButton
             android:id="@+id/radioButton5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix4" />
+            android:text="@string/Choix4_eng" />
 
     </RadioGroup>
 
@@ -95,31 +95,31 @@
             android:id="@+id/radioButton6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix6" />
+            android:text="@string/Choix6_eng" />
 
         <RadioButton
             android:id="@+id/radioButton7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix7" />
+            android:text="@string/Choix7_eng" />
 
         <RadioButton
             android:id="@+id/radioButton8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix8" />
+            android:text="@string/Choix8_eng" />
 
         <RadioButton
             android:id="@+id/radioButton9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix9" />
+            android:text="@string/Choix9_eng" />
 
         <RadioButton
             android:id="@+id/radioButton10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Choix10" />
+            android:text="@string/Choix10_eng" />
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

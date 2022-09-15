@@ -84,34 +84,34 @@ public class DataValidationActivity extends AppCompatActivity {
         intent.putExtra("Rotmap", (Serializable) rotMap);
         switch (choiceId){
             case R.id.radioButton:
-                intent.putExtra("class", 0);
+                intent.putExtra("class", 0); //tomber
                 break;
             case R.id.radioButton2:
-                intent.putExtra("class", 1);
+                intent.putExtra("class", 1); //s'asseoir
                 break;
             case R.id.radioButton3:
-                intent.putExtra("class", 2);
+                intent.putExtra("class", 2); //se lever
                 break;
             case R.id.radioButton4:
-                intent.putExtra("class", 3);
+                intent.putExtra("class", 3); //se coucher
                 break;
             case R.id.radioButton5:
-                intent.putExtra("class", 4);
+                intent.putExtra("class", 4); //marcher
                 break;
             case R.id.radioButton6:
-                intent.putExtra("class", 5);
+                intent.putExtra("class", 5); //poser tel
                 break;
             case R.id.radioButton7:
-                intent.putExtra("class", 6);
+                intent.putExtra("class", 6); //prendre tel
                 break;
             case R.id.radioButton8:
-                intent.putExtra("class", 7);
+                intent.putExtra("class", 7); //chute tel
                 break;
             case R.id.radioButton9:
-                intent.putExtra("class", 8);
+                intent.putExtra("class", 8); //mettre tel dans poche
                 break;
             case R.id.radioButton10:
-                intent.putExtra("class", 9);
+                intent.putExtra("class", 9); //sortir tel de poche
                 break;
         }
         startActivity(intent);

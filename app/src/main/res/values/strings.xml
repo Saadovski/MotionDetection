@@ -20,7 +20,7 @@
     <string name="Patience">Patientez quelques secondes</string>
 
     <string name="message1_eng">To record an action, click the Start button</string>
-    <string name="message2_eng">You\'ll have 3 seconds to get ready then 10 seconds to do the action</string>
+    <string name="message2_eng">You\'ll have 3 seconds to get ready then 7 seconds to do the action</string>
     <string name="button1_eng">Start</string>
     <string name="countdown_timer_eng">7:00</string>
     <string name="message3_eng">Choose the action you just performed, or cancel if you don\'t want to save it</string>

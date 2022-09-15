@@ -23,4 +23,5 @@ public abstract class SensorListenerRunnable implements Runnable, SensorEventLis
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {}
+
 }
